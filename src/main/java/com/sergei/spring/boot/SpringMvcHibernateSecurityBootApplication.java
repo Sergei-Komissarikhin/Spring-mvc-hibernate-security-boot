@@ -1,0 +1,13 @@
+package com.sergei.spring.boot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringMvcHibernateSecurityBootApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringMvcHibernateSecurityBootApplication.class, args);
+    }
+
+}
