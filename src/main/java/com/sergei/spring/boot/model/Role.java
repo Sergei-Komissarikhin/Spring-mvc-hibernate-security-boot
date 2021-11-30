@@ -20,7 +20,7 @@ public class Role implements GrantedAuthority {
     @ManyToMany
     @JoinTable(
             name = "users_roles",
-            joinColumns = @JoinColumn(name="role_id"),
+            joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> users;

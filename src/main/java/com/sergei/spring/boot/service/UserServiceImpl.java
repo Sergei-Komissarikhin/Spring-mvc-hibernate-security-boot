@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
         this.roleService = roleService;
     }
 
-
     @Override
     @Transactional
     public void addUser(User user) {
@@ -34,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addUser(User user,Set<Role> roles) {
+    public void addUser(User user, Set<Role> roles) {
         user.setRoles(getRolesForUpdate(roles));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
@@ -46,10 +45,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id){
-       return userDao.getUserById(id);
-    };
-
+    public User getUserById(Long id) {
+        return userDao.getUserById(id);
+    }
 
     @Override
     @Transactional
@@ -59,14 +57,13 @@ public class UserServiceImpl implements UserService {
         userDao.updateUser(user);
     }
 
-    public Set<Role> getRolesForUpdate(Set<Role> roles){
+    public Set<Role> getRolesForUpdate(Set<Role> roles) {
         Set<Role> updateRoles = new HashSet<>();
-        for(Role role: roles){
+        for (Role role : roles) {
             updateRoles.add(roleService.getRoleByName(role.getRole()));
         }
         return updateRoles;
     }
-
 
     @Override
     @Transactional

@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(cascade = CascadeType.MERGE,
-    fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -41,8 +41,8 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    public void addRoleToUser(Role role){
-        if(roles==null){
+    public void addRoleToUser(Role role) {
+        if (roles == null) {
             roles = new HashSet<>();
         }
         roles.add(role);

@@ -21,8 +21,8 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public List<User> getAllUsers(){
-
-        return entityManager.createQuery("SELECT distinct u FROM User u left join fetch u.roles",User.class).getResultList();
+        return entityManager
+                .createQuery("SELECT distinct u FROM User u left join fetch u.roles",User.class).getResultList();
     }
 
     @Override
@@ -34,7 +34,6 @@ public class UserDaoImpl implements UserDao{
     @Override
     public void updateUser(User user){
         entityManager.merge(user);
-
     }
 
     @Override

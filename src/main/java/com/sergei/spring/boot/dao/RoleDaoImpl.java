@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Repository
-public class RoleDaoImpl implements RoleDao{
+public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
     EntityManager entityManager;
@@ -21,15 +21,15 @@ public class RoleDaoImpl implements RoleDao{
     }
 
     @Override
-    public Role getRoleByName(String name){
-        return (Role) entityManager.createQuery("SELECT role from Role role where role.role = :name")
+    public Role getRoleByName(String name) {
+        return (Role) entityManager
+                .createQuery("SELECT role from Role role where role.role = :name")
                 .setParameter("name", name)
                 .getSingleResult();
-
     }
 
     @Override
     public Set<Role> getRoles() {
-        return new HashSet<>(entityManager.createQuery("SELECT roles FROM Role roles",Role.class).getResultList());
+        return new HashSet<>(entityManager.createQuery("SELECT roles FROM Role roles", Role.class).getResultList());
     }
 }
