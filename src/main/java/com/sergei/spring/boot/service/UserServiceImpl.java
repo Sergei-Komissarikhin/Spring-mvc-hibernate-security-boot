@@ -3,6 +3,7 @@ package com.sergei.spring.boot.service;
 import com.sergei.spring.boot.dao.UserDao;
 import com.sergei.spring.boot.model.Role;
 import com.sergei.spring.boot.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +13,13 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-
 public class UserServiceImpl implements UserService {
+    private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
     private final RoleService roleService;
 
-    public UserServiceImpl(UserDao userDao, RoleService roleService) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userDao, RoleService roleService) {
+        this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
         this.roleService = roleService;
     }
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
     }
 
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void addUser(User user,Set<Role> roles) {
         user.setRoles(getRolesForUpdate(roles));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
     }
 
@@ -51,6 +55,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User user, Set<Role> roles) {
         user.setRoles(getRolesForUpdate(roles));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.updateUser(user);
     }
 

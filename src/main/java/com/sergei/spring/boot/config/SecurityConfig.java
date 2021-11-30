@@ -1,30 +1,48 @@
 package com.sergei.spring.boot.config;
 
 
-import com.sergei.spring.boot.service.UserDetailServiceImpl;
+import com.sergei.spring.boot.config.handler.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.sql.DataSource;
+
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final UserDetailsService userDetailsService;
+
     @Autowired
-    UserDetailServiceImpl userDetailService;
+    public SecurityConfig(LoginSuccessHandler loginSuccessHandler, UserDetailsService userDetailsService, DataSource dataSource) {
+        this.loginSuccessHandler = loginSuccessHandler;
+        this.userDetailsService = userDetailsService;
+    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(8);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/**").permitAll();
+        http
+                .authorizeRequests()
+                .antMatchers("/login/").anonymous()
+                .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                .and().formLogin()
+                .successHandler(loginSuccessHandler);
     }
 }
