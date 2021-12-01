@@ -9,5 +9,4 @@ public class SpringMvcHibernateSecurityBootApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringMvcHibernateSecurityBootApplication.class, args);
     }
-
 }
